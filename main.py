@@ -23,7 +23,7 @@ def optimize_prompt(prompt_to_optimize, context=None):
         raise ValueError("Please set the OPENAI_API_KEY environment variable.")
 
     # Initialize the model
-    model = ChatOpenAI(model="gpt-4o", openai_api_key=openai_api_key)
+    model = ChatOpenAI(model="gpt-4o-mini", openai_api_key=openai_api_key)
 
     # Define JSON schema
     json_schema = {
@@ -101,7 +101,7 @@ def critique_prompt(prompt_to_analyze):
         raise ValueError("Please set the OPENAI_API_KEY environment variable.")
 
     # Initialize the model
-    model = ChatOpenAI(model="gpt-4o", openai_api_key=openai_api_key)
+    model = ChatOpenAI(model="gpt-4o-mini", openai_api_key=openai_api_key)
 
     # Define JSON schema
     json_schema = {
