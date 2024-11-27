@@ -34,9 +34,9 @@ def gan_feedback_loop(
     """
     # Define PromptTemplates
     # Model 1 PromptTemplate
-    prompt_optimization_system_prompt = "You are a content expert tasked with improving content."
+    prompt_optimization_system_prompt = "You are an expert content editor with a mission to enhance the quality, clarity, coherence, engagement, and overall impact of the content provided."
     prompt_optimization_job = """
-You are a content expert. Please improve the following content based on the critique and suggestions provided. Incorporate any user feedback if available.
+Your role is to significantly improve the quality of the content below. Focus on enhancing clarity, engagement, logical flow, factual accuracy, and persuasiveness. Make the content more compelling, well-structured, and easy to understand for the intended audience. Incorporate any provided user feedback to ensure alignment with expectations.
 
 Original Content:
 {original_content}
@@ -64,7 +64,7 @@ Provide the improved content below:
     # Model 2 PromptTemplate
     model2_prompt_template = ChatPromptTemplate.from_messages(
         [
-            ("system", "You are an expert critic. Please critique the following content in JSON format."),
+            ("system", "You are an expert critic specializing in content quality assessment. Your goal is to provide a comprehensive, actionable, and constructive critique of the content below. Your critique should help make the content clearer, more engaging, and more effective in achieving its intended purpose. Provide your response in a structured JSON format."),
             ("user", "{content_to_critique}")
         ]
     )
@@ -177,29 +177,29 @@ generator_llm = ChatOpenAI(model="gpt-4o-mini", openai_api_key=openai_api_key)
 
 # Define JSON schema for critic LLM
 json_schema = {
-    "title": "criticFeedback",
-    "description": "Feedback provided by the critic model",
+    "title": "CriticFeedback",
+    "description": "Comprehensive feedback provided by the critic model to improve the content quality effectively.",
     "type": "object",
     "properties": {
         "Critique": {
             "type": "string",
-            "description": "A critique of the content provided."
+            "description": "A detailed critique of the content, focusing on clarity, engagement, accuracy, and persuasiveness. Include specific examples of what can be improved and why."
         },
         "ClarifyingQuestions": {
             "type": "array",
             "items": {"type": "string"},
-            "description": "Questions to further clarify or improve the content."
+            "description": "Specific questions aimed at clarifying ambiguities or obtaining additional information that could help improve the content further."
         },
         "Score": {
             "type": "integer",
             "minimum": 0,
             "maximum": 100,
-            "description": "A score between 0 and 100 to rate the content."
+            "description": "A score between 0 and 100 to rate the content's quality, where higher scores indicate better overall quality and alignment with goals."
         },
         "FollowUpSuggestions": {
             "type": "array",
             "items": {"type": "string"},
-            "description": "Suggestions for improving the content."
+            "description": "Actionable suggestions for enhancing specific aspects of the content, such as structure, style, tone, factual accuracy, or engagement strategies."
         }
     },
     "required": ["Critique", "ClarifyingQuestions", "Score", "FollowUpSuggestions"]
@@ -214,12 +214,11 @@ result = gan_feedback_loop(
     model_critic_llm=critic_llm,
     prompt=input_prompt,
     require_user_feedback=False,
-    require_user_confirmation=True,
-    min_score=80,
-    max_attempts=4,
-    stagnation_threshold=2
+    require_user_confirmation=False,
+    min_score=85,
+    max_attempts=6,
+    stagnation_threshold=3
 )
-
 
 
 print("Reason to Stop:", result['ReasonToStop'])
